@@ -1,0 +1,23 @@
+{
+  "name": "POS System",
+  "short_name": "POS",
+  "description": "Sistema de punto de venta web",
+  "theme_color": "#0f0f11",
+  "background_color": "#0f0f11",
+  "display": "standalone",
+  "orientation": "landscape",
+  "scope": "/",
+  "start_url": "/pos",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Caja / POS",
+      "short_name": "Caja",
+      "url": "/pos",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
