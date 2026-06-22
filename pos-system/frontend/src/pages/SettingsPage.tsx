@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Settings, Building2, MapPin, Save, Loader2,
-  Globe, DollarSign, Bell, Shield, Palette, CheckCircle2
+  Globe, DollarSign, Bell, Shield, Palette, CheckCircle2,
+  Upload, ImageIcon, Trash2
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAppStore } from '../../store';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
+import { extractColorsFromImage, applyTheme, saveTheme, DEFAULT_THEME } from '../lib/colorExtractor';
 
 type Tab = 'company' | 'branches' | 'preferences' | 'security';
 
@@ -25,6 +27,85 @@ function CompanySettings({ company }: { company: any }) {
   });
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
   const [saved, setSaved] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string | null>(company?.logo_url ?? null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Solo se permiten imágenes');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('La imagen debe ser menor a 2MB');
+      return;
+    }
+
+    setUploadingLogo(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `logos/${company.id}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('company-assets')
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('company-assets')
+        .getPublicUrl(path);
+
+      const publicUrl = urlData.publicUrl + '?t=' + Date.now();
+
+      const { data, error } = await supabase
+        .from('companies')
+        .update({ logo_url: publicUrl })
+        .eq('id', company.id)
+        .select()
+        .single();
+      if (error) throw error;
+
+      setLogoUrl(publicUrl);
+      setCompany(data);
+
+      const colors = await extractColorsFromImage(publicUrl);
+      applyTheme(colors);
+      saveTheme(colors);
+
+      qc.invalidateQueries({ queryKey: ['company'] });
+      toast.success('Logo actualizado — colores aplicados');
+    } catch (err: any) {
+      toast.error(err.message ?? 'Error al subir logo');
+    } finally {
+      setUploadingLogo(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleRemoveLogo = async () => {
+    try {
+      const { error } = await supabase
+        .from('companies')
+        .update({ logo_url: null })
+        .eq('id', company.id)
+        .select()
+        .single();
+      if (error) throw error;
+
+      setLogoUrl(null);
+      setCompany({ ...company, logo_url: null });
+      applyTheme(DEFAULT_THEME);
+      saveTheme(DEFAULT_THEME);
+      localStorage.removeItem('pos_theme');
+      qc.invalidateQueries({ queryKey: ['company'] });
+      toast.success('Logo eliminado — colores por defecto restaurados');
+    } catch (err: any) {
+      toast.error(err.message ?? 'Error al eliminar logo');
+    }
+  };
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -69,6 +150,33 @@ function CompanySettings({ company }: { company: any }) {
 
       <div className="settings-form">
         <div className="form-group full">
+          <label><ImageIcon size={11} /> Logo de la empresa</label>
+          <div className="logo-upload-area">
+            {logoUrl ? (
+              <div className="logo-preview-wrap">
+                <img src={logoUrl} alt="Logo" className="logo-preview" />
+                <div className="logo-actions">
+                  <button onClick={() => fileInputRef.current?.click()} className="btn-ghost sm" disabled={uploadingLogo}>
+                    {uploadingLogo ? <Loader2 size={12} className="spin" /> : <Upload size={12} />} Cambiar
+                  </button>
+                  <button onClick={handleRemoveLogo} className="btn-ghost sm logo-remove-btn">
+                    <Trash2 size={12} /> Quitar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button onClick={() => fileInputRef.current?.click()} className="logo-dropzone" disabled={uploadingLogo}>
+                {uploadingLogo
+                  ? <><Loader2 size={20} className="spin" /><span>Subiendo...</span></>
+                  : <><Upload size={20} /><span>Subir logo</span><span className="logo-hint">PNG, JPG — max 2MB</span></>
+                }
+              </button>
+            )}
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleLogoUpload} hidden />
+          </div>
+        </div>
+
+        <div className="form-group full">
           <label>Nombre de la empresa *</label>
           <input value={form.name} onChange={e => set('name', e.target.value)} placeholder="Mi Tienda SRL" />
         </div>
@@ -104,7 +212,7 @@ function CompanySettings({ company }: { company: any }) {
         {/* Plan badge */}
         <div className="plan-badge-wrap full">
           <div className="plan-badge">
-            <Shield size={14} color="#5c6df0" />
+            <Shield size={14} color="var(--c-primary)" />
             <span>Plan actual: <strong>{company?.plan?.toUpperCase()}</strong></span>
             <a href="#upgrade" className="upgrade-link">Mejorar plan →</a>
           </div>
@@ -398,13 +506,13 @@ const cfgStyles = `
   .cfg-header h1 { font-size: 20px; font-weight: 600; margin: 0; }
   .cfg-tabs { display: flex; gap: 2px; border-bottom: 1px solid #1e1e25; }
   .cfg-tab { display: flex; align-items: center; gap: 7px; background: none; border: none; border-bottom: 2px solid transparent; padding: 9px 16px; color: #6b6a65; font-size: 13px; cursor: pointer; margin-bottom: -1px; transition: all .15s; }
-  .cfg-tab.active { color: #a5b4fc; border-bottom-color: #5c6df0; }
+  .cfg-tab.active { color: var(--c-primary-text); border-bottom-color: var(--c-primary); }
   .cfg-tab:hover:not(.active) { color: #e8e6e1; }
   .cfg-body { max-width: 700px; }
 
   .settings-section { display: flex; flex-direction: column; gap: 18px; }
   .settings-section-header { display: flex; align-items: flex-start; gap: 12px; padding-bottom: 4px; border-bottom: 1px solid #1e1e25; }
-  .settings-section-header > svg { margin-top: 3px; color: #5c6df0; flex-shrink: 0; }
+  .settings-section-header > svg { margin-top: 3px; color: var(--c-primary); flex-shrink: 0; }
   .settings-section-header h3 { font-size: 15px; font-weight: 600; margin: 0 0 3px; }
   .settings-section-header p  { font-size: 12px; color: #4a4a55; margin: 0; }
   .settings-section-header .btn-primary { margin-left: auto; }
@@ -414,28 +522,28 @@ const cfgStyles = `
   .form-group.full { grid-column: 1 / -1; }
   .form-group label { font-size: 12px; color: #6b6a65; display: flex; align-items: center; gap: 4px; }
   .form-group input, .form-group select { background: #131318; border: 1px solid #2a2a30; border-radius: 8px; padding: 9px 12px; color: #e8e6e1; font-size: 13px; outline: none; transition: border-color .15s; width: 100%; }
-  .form-group input:focus, .form-group select:focus { border-color: #5c6df0; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--c-primary); }
   .form-group select option { background: #1a1a1f; }
   .plan-badge-wrap.full { grid-column: 1 / -1; }
-  .plan-badge { display: flex; align-items: center; gap: 10px; background: #14141e; border: 1px solid #5c6df033; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #9997a0; }
-  .plan-badge strong { color: #a5b4fc; }
-  .upgrade-link { margin-left: auto; color: #5c6df0; font-size: 12px; text-decoration: none; }
-  .upgrade-link:hover { color: #a5b4fc; }
+  .plan-badge { display: flex; align-items: center; gap: 10px; background: #14141e; border: 1px solid var(--c-primary)33; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #9997a0; }
+  .plan-badge strong { color: var(--c-primary-text); }
+  .upgrade-link { margin-left: auto; color: var(--c-primary); font-size: 12px; text-decoration: none; }
+  .upgrade-link:hover { color: var(--c-primary-text); }
   .form-actions.full { grid-column: 1 / -1; display: flex; justify-content: flex-end; }
 
-  .btn-primary { display: flex; align-items: center; gap: 6px; background: #5c6df0; border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 500; padding: 8px 14px; cursor: pointer; transition: all .15s; }
+  .btn-primary { display: flex; align-items: center; gap: 6px; background: var(--c-primary); border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 500; padding: 8px 14px; cursor: pointer; transition: all .15s; }
   .btn-primary:hover:not(:disabled) { background: #4f60e6; }
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-primary.sm { font-size: 12px; padding: 6px 12px; }
   .btn-ghost { display: flex; align-items: center; gap: 6px; background: none; border: 1px solid #2a2a30; border-radius: 8px; color: #9997a0; font-size: 13px; padding: 8px 14px; cursor: pointer; }
   .btn-ghost.sm { font-size: 12px; padding: 6px 12px; }
   .action-btn { background: none; border: 1px solid #2a2a30; border-radius: 6px; color: #6b6a65; cursor: pointer; padding: 5px 7px; transition: all .1s; display: flex; align-items: center; }
-  .action-btn:hover { border-color: #5c6df0; color: #a5b4fc; }
+  .action-btn:hover { border-color: var(--c-primary); color: var(--c-primary-text); }
 
   .settings-loading { display: flex; align-items: center; justify-content: center; padding: 30px; color: #4a4a55; }
   .branches-list { display: flex; flex-direction: column; gap: 8px; }
   .branch-row { background: #131318; border: 1px solid #1e1e25; border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color .1s; }
-  .branch-row.editing { border-color: #5c6df044; }
+  .branch-row.editing { border-color: var(--c-primary)44; }
   .branch-info { display: flex; flex-direction: column; gap: 4px; }
   .branch-name { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: #e8e6e1; }
   .branch-meta { font-size: 11px; color: #4a4a55; }
@@ -445,7 +553,7 @@ const cfgStyles = `
   .branch-status.inactive { background: #1a1a1f; color: #4a4a55; }
   .branch-edit-form { display: flex; gap: 8px; align-items: center; flex: 1; flex-wrap: wrap; }
   .branch-edit-form input { background: #0f0f11; border: 1px solid #2a2a30; border-radius: 6px; padding: 7px 10px; color: #e8e6e1; font-size: 13px; outline: none; flex: 1; min-width: 100px; }
-  .branch-edit-form input:focus { border-color: #5c6df0; }
+  .branch-edit-form input:focus { border-color: var(--c-primary); }
   .branch-edit-actions { display: flex; gap: 6px; }
 
   .prefs-list { display: flex; flex-direction: column; gap: 0; border: 1px solid #1e1e25; border-radius: 12px; overflow: hidden; }
@@ -454,16 +562,16 @@ const cfgStyles = `
   .pref-label { font-size: 13px; color: #9997a0; display: flex; flex-direction: column; gap: 2px; }
   .pref-hint { font-size: 11px; color: #4a4a55; }
   .pref-input { background: #131318; border: 1px solid #2a2a30; border-radius: 7px; padding: 7px 10px; color: #e8e6e1; font-size: 13px; outline: none; width: 80px; text-align: right; }
-  .pref-input:focus { border-color: #5c6df0; }
+  .pref-input:focus { border-color: var(--c-primary); }
   .pref-select { background: #131318; border: 1px solid #2a2a30; border-radius: 7px; padding: 7px 10px; color: #e8e6e1; font-size: 12px; outline: none; max-width: 220px; }
-  .pref-select:focus { border-color: #5c6df0; }
+  .pref-select:focus { border-color: var(--c-primary); }
   .pref-select option { background: #1a1a1f; }
   .prefs-section-divider { padding: 8px 18px 6px; font-size: 11px; font-weight: 600; color: #4a4a55; text-transform: uppercase; letter-spacing: .06em; background: #0f0f11; border-bottom: 1px solid #1e1e25; }
 
   .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
   .toggle-switch input { opacity: 0; width: 0; height: 0; }
   .toggle-track { position: absolute; inset: 0; background: #2a2a30; border-radius: 22px; transition: background .2s; cursor: pointer; }
-  .toggle-switch input:checked + .toggle-track { background: #5c6df0; }
+  .toggle-switch input:checked + .toggle-track { background: var(--c-primary); }
   .toggle-thumb { position: absolute; height: 16px; width: 16px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: transform .2s; }
   .toggle-switch input:checked + .toggle-track .toggle-thumb { transform: translateX(18px); }
 
@@ -476,4 +584,14 @@ const cfgStyles = `
 
   .spin { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  .logo-upload-area { margin-top: 4px; }
+  .logo-dropzone { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; padding: 24px; background: #131318; border: 2px dashed #2a2a30; border-radius: 12px; color: #6b6a65; cursor: pointer; transition: all .15s; font-size: 13px; }
+  .logo-dropzone:hover { border-color: var(--c-primary); color: var(--c-primary-text); }
+  .logo-dropzone:disabled { opacity: 0.5; cursor: not-allowed; }
+  .logo-hint { font-size: 11px; color: #4a4a55; }
+  .logo-preview-wrap { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: #131318; border: 1px solid #1e1e25; border-radius: 12px; }
+  .logo-preview { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; border: 1px solid #2a2a30; }
+  .logo-actions { display: flex; gap: 8px; }
+  .logo-remove-btn:hover { border-color: #ef4444 !important; color: #ef4444 !important; }
 `;

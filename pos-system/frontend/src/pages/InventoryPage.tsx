@@ -462,11 +462,11 @@ const invStyles = `
 
   .btn-primary {
     display: flex; align-items: center; gap: 6px;
-    background: #5c6df0; border: none; border-radius: 8px;
+    background: var(--c-primary); border: none; border-radius: 8px;
     color: #fff; font-size: 13px; font-weight: 500; padding: 8px 14px; cursor: pointer;
     transition: background .15s;
   }
-  .btn-primary:hover:not(:disabled) { background: #4f60e6; }
+  .btn-primary:hover:not(:disabled) { background: var(--c-primary-hover); }
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-ghost { display: flex; align-items: center; gap: 6px; background: none; border: 1px solid #2a2a30; border-radius: 8px; color: #9997a0; font-size: 13px; padding: 8px 14px; cursor: pointer; }
   .btn-ghost:hover { border-color: #3a3a45; }
@@ -519,7 +519,7 @@ const invStyles = `
 
   .actions-cell { display: flex; gap: 4px; justify-content: flex-end; }
   .action-btn { background: none; border: 1px solid #2a2a30; border-radius: 6px; color: #6b6a65; cursor: pointer; padding: 5px 7px; transition: all .1s; display: flex; align-items: center; }
-  .action-btn:hover { border-color: #5c6df0; color: #a5b4fc; }
+  .action-btn:hover { border-color: var(--c-primary); color: var(--c-primary-text); }
 
   .table-loading, .table-empty { text-align: center; padding: 40px; color: #4a4a55; }
   .table-loading { display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -543,14 +543,14 @@ const invStyles = `
     padding: 9px 12px; color: #e8e6e1; font-size: 13px; outline: none;
     transition: border-color .15s; width: 100%;
   }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #5c6df0; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--c-primary); }
   .form-group textarea { resize: vertical; }
   .form-group select option { background: #1a1a1f; }
   .inline-icon { display: inline; vertical-align: middle; }
 
   .form-toggles { display: flex; gap: 20px; }
   .toggle-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; color: #9997a0; }
-  .toggle-label input[type=checkbox] { accent-color: #5c6df0; width: 15px; height: 15px; }
+  .toggle-label input[type=checkbox] { accent-color: var(--c-primary); width: 15px; height: 15px; }
 
   .stock-product-name { font-size: 15px; font-weight: 600; color: #e8e6e1; }
   .stock-current { font-size: 13px; color: #6b6a65; }

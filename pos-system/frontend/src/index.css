@@ -1,3 +1,11 @@
+/* ── Theme Variables ────────────────────────────────────────── */
+:root {
+  --c-primary: #5c6df0;
+  --c-primary-hover: #4f60e6;
+  --c-primary-muted: #5c6df022;
+  --c-primary-text: #a5b4fc;
+}
+
 /* ── Reset & Base ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -17,10 +25,10 @@ html, body, #root {
 ::-webkit-scrollbar-thumb:hover { background: #3a3a45; }
 
 /* ── Focus ring ─────────────────────────────────────────────── */
-:focus-visible { outline: 2px solid #5c6df0; outline-offset: 2px; border-radius: 4px; }
+:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; border-radius: 4px; }
 
 /* ── Selection ──────────────────────────────────────────────── */
-::selection { background: #5c6df033; color: #a5b4fc; }
+::selection { background: var(--c-primary-muted); color: var(--c-primary-text); }
 
 /* ── Animations ─────────────────────────────────────────────── */
 @keyframes fadeIn {

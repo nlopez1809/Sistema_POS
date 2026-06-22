@@ -177,7 +177,7 @@ export default function DashboardPage() {
       <div className="dash-kpis">
         <StatCard
           icon={DollarSign} label="Ingresos hoy" value={fmt(todayRevenue)}
-          sub={`${todayCount} ventas`} color="#5c6df0"
+          sub={`${todayCount} ventas`} color="var(--c-primary)"
           trend={todayRevenue > 0 ? 'up' : 'neutral'} trendVal="hoy"
         />
         <StatCard
@@ -218,8 +218,8 @@ export default function DashboardPage() {
             <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#5c6df0" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#5c6df0" stopOpacity={0} />
+                  <stop offset="5%" stopColor="var(--c-primary)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="var(--c-primary)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#1e1e25" vertical={false} />
@@ -229,7 +229,7 @@ export default function DashboardPage() {
                 contentStyle={{ background: '#1a1a1f', border: '1px solid #2a2a30', borderRadius: 8, color: '#e8e6e1', fontSize: 12 }}
                 formatter={(v: number) => [fmt(v), 'Ingresos']}
               />
-              <Area type="monotone" dataKey="revenue" stroke="#5c6df0" strokeWidth={2.5} fill="url(#revGrad)" dot={{ fill: '#5c6df0', r: 3 }} activeDot={{ r: 5 }} />
+              <Area type="monotone" dataKey="revenue" stroke="var(--c-primary)" strokeWidth={2.5} fill="url(#revGrad)" dot={{ fill: 'var(--c-primary)', r: 3 }} activeDot={{ r: 5 }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -288,11 +288,11 @@ const dashStyles = `
   .dash-date { font-size: 13px; color: #4a4a55; margin-top: 2px; text-transform: capitalize; }
   .dash-cta {
     display: flex; align-items: center; gap: 7px;
-    background: #5c6df0; border: none; border-radius: 10px;
+    background: var(--c-primary); border: none; border-radius: 10px;
     color: #fff; font-size: 14px; font-weight: 600; padding: 10px 18px; cursor: pointer;
     transition: all .15s; white-space: nowrap;
   }
-  .dash-cta:hover { background: #4f60e6; transform: translateY(-1px); }
+  .dash-cta:hover { background: var(--c-primary-hover); transform: translateY(-1px); }
   .dash-cta.small { font-size: 13px; padding: 8px 14px; margin-top: 12px; }
 
   /* KPIs */
@@ -328,10 +328,10 @@ const dashStyles = `
   .dash-card-total { font-size: 18px; font-weight: 700; color: #e8e6e1; }
   .dash-link {
     display: flex; align-items: center; gap: 4px;
-    background: none; border: none; color: #5c6df0; font-size: 12px; cursor: pointer; padding: 0;
+    background: none; border: none; color: var(--c-primary); font-size: 12px; cursor: pointer; padding: 0;
     transition: color .1s;
   }
-  .dash-link:hover { color: #a5b4fc; }
+  .dash-link:hover { color: var(--c-primary-text); }
 
   /* Recent sales */
   .recent-sales-list { display: flex; flex-direction: column; gap: 2px; }
@@ -344,7 +344,7 @@ const dashStyles = `
   .ticket-num { font-size: 12px; font-family: monospace; color: #9997a0; }
   .ticket-time { display: flex; align-items: center; gap: 3px; font-size: 10px; color: #3a3a42; }
   .recent-sale-method { font-size: 11px; color: #6b6a65; min-width: 56px; }
-  .recent-sale-total { font-size: 14px; font-weight: 600; color: #a5b4fc; text-align: right; min-width: 70px; }
+  .recent-sale-total { font-size: 14px; font-weight: 600; color: var(--c-primary-text); text-align: right; min-width: 70px; }
 
   .dash-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 0; color: #2a2a38; gap: 8px; font-size: 13px; }
 

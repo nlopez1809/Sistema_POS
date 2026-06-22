@@ -143,7 +143,7 @@ const loginStyles = `
   .login-bg {
     position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse 80% 60% at 20% 20%, #5c6df015 0%, transparent 60%),
+      radial-gradient(ellipse 80% 60% at 20% 20%, var(--c-primary)15 0%, transparent 60%),
       radial-gradient(ellipse 60% 60% at 80% 80%, #34d39910 0%, transparent 60%);
     pointer-events: none;
   }
@@ -163,7 +163,7 @@ const loginStyles = `
   }
   .logo-mark {
     width: 40px; height: 40px; border-radius: 10px;
-    background: #5c6df0; display: flex; align-items: center; justify-content: center;
+    background: var(--c-primary); display: flex; align-items: center; justify-content: center;
     color: #fff;
   }
   .login-head { display: flex; flex-direction: column; gap: 4px; }
@@ -178,7 +178,7 @@ const loginStyles = `
     padding: 11px 14px; color: #e8e6e1; font-size: 14px; outline: none;
     transition: border-color .15s; width: 100%;
   }
-  .field input:focus { border-color: #5c6df0; }
+  .field input:focus { border-color: var(--c-primary); }
   .field input::placeholder { color: #2a2a38; }
   .pass-wrap { position: relative; }
   .pass-wrap input { padding-right: 42px; }
@@ -197,11 +197,11 @@ const loginStyles = `
 
   .login-btn {
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    background: #5c6df0; border: none; border-radius: 10px;
+    background: var(--c-primary); border: none; border-radius: 10px;
     padding: 13px; color: #fff; font-size: 15px; font-weight: 600;
     cursor: pointer; transition: all .15s; margin-top: 4px;
   }
-  .login-btn:hover:not(:disabled) { background: #4f60e6; }
+  .login-btn:hover:not(:disabled) { background: var(--c-primary-hover); }
   .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .login-footer { font-size: 12px; color: #2a2a38; text-align: center; }

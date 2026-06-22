@@ -450,11 +450,11 @@ const csStyles = `
     background: #131318; border: 1px solid #1e1e25; border-radius: 12px;
     padding: 18px 20px; display: flex; flex-direction: column; gap: 4px;
   }
-  .stat-card.highlight { border-color: #5c6df044; background: #14141e; }
+  .stat-card.highlight { border-color: var(--c-primary)44; background: #14141e; }
   .stat-label { font-size: 11px; color: #4a4a55; text-transform: uppercase; letter-spacing: .05em; }
   .stat-value { font-size: 24px; font-weight: 700; color: #e8e6e1; }
   .stat-value.cash { color: #22c55e; }
-  .stat-value.card { color: #a5b4fc; }
+  .stat-value.card { color: var(--c-primary-text); }
   .stat-sub  { font-size: 11px; color: #3a3a42; }
 
   .session-sales h3, .past-sessions h3 { font-size: 14px; font-weight: 500; color: #6b6a65; margin-bottom: 10px; }
@@ -474,7 +474,7 @@ const csStyles = `
 
   .method-tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   .method-tag.cash     { background: #0f2d1a; color: #22c55e; }
-  .method-tag.card     { background: #1a1a2e; color: #a5b4fc; }
+  .method-tag.card     { background: #1a1a2e; color: var(--c-primary-text); }
   .method-tag.qr       { background: #1a1a03; color: #d97706; }
   .method-tag.transfer { background: #1a1a1f; color: #6b7280; }
 
@@ -502,12 +502,12 @@ const csStyles = `
     background: #131318; border: 1px solid #2a2a30; border-radius: 8px;
     padding: 10px 12px; color: #e8e6e1; font-size: 14px; outline: none; transition: border-color .15s; width: 100%;
   }
-  .form-group input:focus, .form-group textarea:focus { border-color: #5c6df0; }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--c-primary); }
   .form-group textarea { resize: vertical; font-size: 13px; }
 
   .quick-amounts { display: flex; gap: 8px; flex-wrap: wrap; }
   .quick-btn { padding: 6px 12px; background: #131318; border: 1px solid #2a2a30; border-radius: 8px; color: #9997a0; font-size: 12px; cursor: pointer; transition: all .1s; }
-  .quick-btn:hover { border-color: #5c6df0; color: #a5b4fc; }
+  .quick-btn:hover { border-color: var(--c-primary); color: var(--c-primary-text); }
 
   .close-summary { background: #0f0f11; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
   .summary-row { display: flex; justify-content: space-between; font-size: 13px; color: #6b6a65; }

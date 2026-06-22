@@ -346,7 +346,7 @@ export default function SuppliersPage() {
       {/* Summary cards */}
       <div className="sup-summary">
         <div className="sup-summary-card">
-          <Truck size={16} color="#5c6df0" />
+          <Truck size={16} color="var(--c-primary)" />
           <div>
             <span className="sum-value">{suppliers.length}</span>
             <span className="sum-label">Proveedores activos</span>
@@ -489,8 +489,8 @@ const supStyles = `
   .sup-title { display: flex; align-items: center; gap: 10px; }
   .sup-title h1 { font-size: 20px; font-weight: 600; margin: 0; }
   .sup-actions { display: flex; gap: 8px; }
-  .btn-primary { display: flex; align-items: center; gap: 6px; background: #5c6df0; border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 500; padding: 8px 14px; cursor: pointer; transition: background .15s; }
-  .btn-primary:hover:not(:disabled) { background: #4f60e6; }
+  .btn-primary { display: flex; align-items: center; gap: 6px; background: var(--c-primary); border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 500; padding: 8px 14px; cursor: pointer; transition: background .15s; }
+  .btn-primary:hover:not(:disabled) { background: var(--c-primary-hover); }
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-secondary { display: flex; align-items: center; gap: 6px; background: #1a1a1f; border: 1px solid #2a2a30; border-radius: 8px; color: #9997a0; font-size: 13px; font-weight: 500; padding: 8px 14px; cursor: pointer; transition: all .15s; }
   .btn-secondary:hover { border-color: #3a3a45; color: #e8e6e1; }
@@ -503,7 +503,7 @@ const supStyles = `
 
   .sup-tabs { display: flex; gap: 4px; border-bottom: 1px solid #1e1e25; }
   .tab-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; border-bottom: 2px solid transparent; padding: 9px 16px; color: #6b6a65; font-size: 13px; cursor: pointer; margin-bottom: -1px; transition: all .15s; }
-  .tab-btn.active { color: #a5b4fc; border-bottom-color: #5c6df0; }
+  .tab-btn.active { color: var(--c-primary-text); border-bottom-color: var(--c-primary); }
   .tab-btn:hover:not(.active) { color: #e8e6e1; }
 
   .sup-search { display: flex; align-items: center; gap: 8px; background: #1a1a1f; border: 1px solid #2a2a30; border-radius: 8px; padding: 0 12px; max-width: 380px; color: #6b6a65; }
@@ -517,12 +517,12 @@ const supStyles = `
   .sup-card { background: #131318; border: 1px solid #1e1e25; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; transition: border-color .15s; }
   .sup-card:hover { border-color: #2a2a35; }
   .sup-card-top { display: flex; align-items: center; gap: 10px; }
-  .sup-icon { width: 36px; height: 36px; border-radius: 8px; background: #5c6df022; color: #a5b4fc; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sup-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--c-primary)22; color: var(--c-primary-text); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .sup-card-info { flex: 1; min-width: 0; }
   .sup-card-name { display: block; font-size: 14px; font-weight: 500; color: #e8e6e1; }
   .sup-card-contact { display: block; font-size: 12px; color: #4a4a55; }
   .action-btn { background: none; border: 1px solid #2a2a30; border-radius: 6px; color: #6b6a65; cursor: pointer; padding: 5px 7px; transition: all .1s; display: flex; align-items: center; }
-  .action-btn:hover { border-color: #5c6df0; color: #a5b4fc; }
+  .action-btn:hover { border-color: var(--c-primary); color: var(--c-primary-text); }
   .sup-card-meta { display: flex; gap: 12px; flex-wrap: wrap; }
   .sup-card-meta span { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #6b6a65; }
   .sup-card-notes { font-size: 11px; color: #3a3a42; font-style: italic; border-top: 1px solid #1e1e25; padding-top: 8px; }
@@ -556,7 +556,7 @@ const supStyles = `
   .form-group { display: flex; flex-direction: column; gap: 5px; }
   .form-group label { font-size: 12px; color: #6b6a65; display: flex; align-items: center; gap: 4px; }
   .form-group input, .form-group select, .form-group textarea { background: #131318; border: 1px solid #2a2a30; border-radius: 8px; padding: 9px 12px; color: #e8e6e1; font-size: 13px; outline: none; transition: border-color .15s; width: 100%; }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #5c6df0; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--c-primary); }
   .form-group select option { background: #1a1a1f; }
   .form-group textarea { resize: vertical; }
   .form-row { display: flex; gap: 12px; }
@@ -565,15 +565,15 @@ const supStyles = `
   .purchase-items-header { display: grid; grid-template-columns: 1fr 90px 100px 90px 28px; gap: 8px; font-size: 11px; color: #4a4a55; padding: 0 2px; }
   .purchase-item-row { display: grid; grid-template-columns: 1fr 90px 100px 90px 28px; gap: 8px; align-items: center; }
   .purchase-item-row input, .purchase-item-row select { background: #131318; border: 1px solid #2a2a30; border-radius: 6px; padding: 7px 10px; color: #e8e6e1; font-size: 13px; outline: none; width: 100%; }
-  .purchase-item-row input:focus, .purchase-item-row select:focus { border-color: #5c6df0; }
-  .item-subtotal { font-size: 12px; color: #a5b4fc; font-weight: 600; text-align: right; }
+  .purchase-item-row input:focus, .purchase-item-row select:focus { border-color: var(--c-primary); }
+  .item-subtotal { font-size: 12px; color: var(--c-primary-text); font-weight: 600; text-align: right; }
   .remove-item-btn { background: none; border: 1px solid #2a2a30; border-radius: 5px; color: #4a4a55; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: all .1s; }
   .remove-item-btn:hover { border-color: #ef4444; color: #ef4444; }
-  .add-item-btn { display: flex; align-items: center; gap: 5px; background: none; border: 1px dashed #2a2a30; border-radius: 7px; color: #5c6df0; font-size: 12px; padding: 7px 12px; cursor: pointer; transition: all .1s; width: fit-content; }
-  .add-item-btn:hover { border-color: #5c6df0; background: #5c6df010; }
+  .add-item-btn { display: flex; align-items: center; gap: 5px; background: none; border: 1px dashed #2a2a30; border-radius: 7px; color: var(--c-primary); font-size: 12px; padding: 7px 12px; cursor: pointer; transition: all .1s; width: fit-content; }
+  .add-item-btn:hover { border-color: var(--c-primary); background: var(--c-primary)10; }
   .purchase-total-row { display: flex; justify-content: space-between; align-items: center; background: #131318; border-radius: 8px; padding: 12px 14px; }
   .purchase-total-row span:first-child { font-size: 13px; color: #6b6a65; }
-  .purchase-total-value { font-size: 20px; font-weight: 700; color: #a5b4fc; }
+  .purchase-total-value { font-size: 20px; font-weight: 700; color: var(--c-primary-text); }
 
   .spin { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }

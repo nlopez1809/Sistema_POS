@@ -11,7 +11,7 @@ import type { User, UserRole } from '../../../shared/types';
 
 // ── Role config ───────────────────────────────────────────────
 const ROLES: { value: UserRole; label: string; color: string; desc: string }[] = [
-  { value: 'admin',    label: 'Administrador', color: '#5c6df0', desc: 'Acceso completo excepto configuración de empresa' },
+  { value: 'admin',    label: 'Administrador', color: 'var(--c-primary)', desc: 'Acceso completo excepto configuración de empresa' },
   { value: 'manager',  label: 'Gerente',       color: '#f59e0b', desc: 'Ventas, inventario y reportes' },
   { value: 'cashier',  label: 'Cajero',        color: '#34d399', desc: 'Solo acceso a la pantalla de caja' },
 ];
@@ -312,8 +312,8 @@ const usrStyles = `
   .usr-title h1 { font-size: 20px; font-weight: 600; margin: 0; }
   .usr-count { font-size: 12px; background: #1a1a1f; border: 1px solid #2a2a30; border-radius: 20px; padding: 2px 10px; color: #6b6a65; }
 
-  .btn-primary { display: flex; align-items: center; gap: 6px; background: #5c6df0; border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 500; padding: 8px 14px; cursor: pointer; }
-  .btn-primary:hover:not(:disabled) { background: #4f60e6; }
+  .btn-primary { display: flex; align-items: center; gap: 6px; background: var(--c-primary); border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 500; padding: 8px 14px; cursor: pointer; }
+  .btn-primary:hover:not(:disabled) { background: var(--c-primary-hover); }
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-ghost { display: flex; align-items: center; gap: 6px; background: none; border: 1px solid #2a2a30; border-radius: 8px; color: #9997a0; font-size: 13px; padding: 8px 14px; cursor: pointer; }
 
@@ -355,7 +355,7 @@ const usrStyles = `
   .user-card-email { display: block; font-size: 12px; color: #4a4a55; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .user-card-actions { display: flex; gap: 4px; flex-shrink: 0; }
   .icon-btn { background: none; border: 1px solid #2a2a30; border-radius: 6px; color: #6b6a65; cursor: pointer; padding: 5px; display: flex; align-items: center; transition: all .1s; }
-  .icon-btn:hover { border-color: #5c6df0; color: #a5b4fc; }
+  .icon-btn:hover { border-color: var(--c-primary); color: var(--c-primary-text); }
   .icon-btn.warn:hover { border-color: #ef4444; color: #ef4444; }
   .icon-btn.success:hover { border-color: #22c55e; color: #22c55e; }
 
@@ -380,7 +380,7 @@ const usrStyles = `
     background: #131318; border: 1px solid #2a2a30; border-radius: 8px;
     padding: 9px 12px; color: #e8e6e1; font-size: 13px; outline: none; transition: border-color .15s;
   }
-  .form-group input:focus { border-color: #5c6df0; }
+  .form-group input:focus { border-color: var(--c-primary); }
   .form-group input:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .role-selector { display: flex; flex-direction: column; gap: 6px; }
@@ -395,7 +395,7 @@ const usrStyles = `
   .role-desc { font-size: 11px; color: #4a4a55; margin-top: 2px; }
 
   .toggle-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; color: #9997a0; }
-  .toggle-label input[type=checkbox] { accent-color: #5c6df0; width: 15px; height: 15px; }
+  .toggle-label input[type=checkbox] { accent-color: var(--c-primary); width: 15px; height: 15px; }
 
   .spin { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }

@@ -89,7 +89,7 @@ function StepCompany({ data, onChange, onNext }: {
   return (
     <div className="step-content">
       <div className="step-hero">
-        <div className="step-hero-icon" style={{ background: '#5c6df020', color: '#5c6df0' }}>
+        <div className="step-hero-icon" style={{ background: 'var(--c-primary)20', color: 'var(--c-primary)' }}>
           <Store size={28} />
         </div>
         <h2>¿Cómo se llama tu negocio?</h2>
@@ -499,7 +499,7 @@ export default function OnboardingWizard() {
       if (data.categories.length > 0) {
         const { data: cats, error: catErr } = await supabase
           .from('categories')
-          .insert(data.categories.map(name => ({ company_id: company.id, name, color: '#5c6df0', is_active: true })))
+          .insert(data.categories.map(name => ({ company_id: company.id, name, color: 'var(--c-primary)', is_active: true })))
           .select();
         if (catErr) throw catErr;
         cats?.forEach((c, i) => { catIds[i] = c.id; });
@@ -616,7 +616,7 @@ const wizStyles = `
   .wiz-bg {
     position: fixed; inset: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse 70% 50% at 15% 15%, #5c6df018 0%, transparent 60%),
+      radial-gradient(ellipse 70% 50% at 15% 15%, var(--c-primary)18 0%, transparent 60%),
       radial-gradient(ellipse 50% 50% at 85% 80%, #34d39910 0%, transparent 60%);
   }
   .wizard-shell {
@@ -627,7 +627,7 @@ const wizStyles = `
 
   /* Logo */
   .wiz-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: #e8e6e1; }
-  .wiz-logo-icon { width: 38px; height: 38px; border-radius: 10px; background: #5c6df0; display: flex; align-items: center; justify-content: center; color: #fff; }
+  .wiz-logo-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--c-primary); display: flex; align-items: center; justify-content: center; color: #fff; }
 
   /* Step bar */
   .step-bar { display: flex; align-items: center; gap: 0; width: 100%; max-width: 520px; }
@@ -638,10 +638,10 @@ const wizStyles = `
     display: flex; align-items: center; justify-content: center;
     color: #4a4a55; transition: all .2s;
   }
-  .step-item.active .step-circle  { border-color: #5c6df0; background: #1a1a2e; color: #a5b4fc; }
+  .step-item.active .step-circle  { border-color: var(--c-primary); background: #1a1a2e; color: var(--c-primary-text); }
   .step-item.done   .step-circle  { border-color: #22c55e; background: #0f2d1a; color: #22c55e; }
   .step-label { font-size: 11px; color: #4a4a55; white-space: nowrap; }
-  .step-item.active .step-label { color: #a5b4fc; }
+  .step-item.active .step-label { color: var(--c-primary-text); }
   .step-item.done   .step-label { color: #22c55e; }
   .step-line { flex: 1; height: 1.5px; background: #2a2a30; margin: 0 4px; margin-bottom: 16px; transition: background .2s; }
   .step-line.done { background: #22c55e; }
@@ -672,10 +672,10 @@ const wizStyles = `
     padding: 11px 14px; color: #e8e6e1; font-size: 14px; outline: none;
     transition: border-color .15s; width: 100%;
   }
-  .wiz-field input:focus, .wiz-field select:focus { border-color: #5c6df0; }
+  .wiz-field input:focus, .wiz-field select:focus { border-color: var(--c-primary); }
   .wiz-field input::placeholder { color: #3a3a42; }
   .wiz-field select option { background: #1a1a1f; }
-  .wiz-field.required label::after { content: ' *'; color: #5c6df0; }
+  .wiz-field.required label::after { content: ' *'; color: var(--c-primary); }
   .field-hint { font-size: 11px; color: #3a3a42; margin-top: 1px; }
 
   /* Footer */
@@ -690,11 +690,11 @@ const wizStyles = `
   .btn-back:disabled { opacity: 0.4; cursor: not-allowed; }
   .btn-next {
     display: flex; align-items: center; gap: 7px;
-    background: #5c6df0; border: none; border-radius: 10px;
+    background: var(--c-primary); border: none; border-radius: 10px;
     color: #fff; font-size: 14px; font-weight: 600; padding: 10px 20px; cursor: pointer;
     transition: all .15s;
   }
-  .btn-next:hover:not(:disabled) { background: #4f60e6; transform: translateY(-1px); }
+  .btn-next:hover:not(:disabled) { background: var(--c-primary-hover); transform: translateY(-1px); }
   .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
   .btn-finish {
     display: flex; align-items: center; gap: 7px;
@@ -708,11 +708,11 @@ const wizStyles = `
   /* Sample button */
   .sample-btn {
     display: flex; align-items: center; gap: 7px; width: fit-content;
-    background: #1a1a2e; border: 1px dashed #5c6df066; border-radius: 8px;
-    color: #a5b4fc; font-size: 12px; padding: 7px 14px; cursor: pointer;
+    background: #1a1a2e; border: 1px dashed var(--c-primary)66; border-radius: 8px;
+    color: var(--c-primary-text); font-size: 12px; padding: 7px 14px; cursor: pointer;
     transition: all .15s;
   }
-  .sample-btn:hover { background: #1e1e38; border-color: #5c6df0; }
+  .sample-btn:hover { background: #1e1e38; border-color: var(--c-primary); }
 
   /* Category chips */
   .wiz-section { display: flex; flex-direction: column; gap: 10px; }
@@ -725,21 +725,21 @@ const wizStyles = `
   .categories-row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
   .cat-chip {
     display: flex; align-items: center; gap: 5px;
-    background: #1a1a2e; border: 1px solid #5c6df044;
+    background: #1a1a2e; border: 1px solid var(--c-primary)44;
     border-radius: 20px; padding: 4px 10px 4px 12px;
-    font-size: 12px; color: #a5b4fc;
+    font-size: 12px; color: var(--c-primary-text);
   }
   .cat-chip button { background: none; border: none; color: #4a4a55; cursor: pointer; display: flex; align-items: center; padding: 1px; }
   .cat-chip button:hover { color: #ef4444; }
   .cat-add { display: flex; align-items: center; background: #1a1a1f; border: 1px solid #2a2a30; border-radius: 20px; overflow: hidden; }
   .cat-add input { background: none; border: none; color: #e8e6e1; font-size: 12px; padding: 5px 12px; outline: none; width: 130px; }
   .cat-add input::placeholder { color: #3a3a42; }
-  .cat-add button { background: none; border: none; border-left: 1px solid #2a2a30; color: #5c6df0; cursor: pointer; padding: 5px 10px; display: flex; align-items: center; }
+  .cat-add button { background: none; border: none; border-left: 1px solid #2a2a30; color: var(--c-primary); cursor: pointer; padding: 5px 10px; display: flex; align-items: center; }
   .cat-add button:disabled { color: #2a2a30; cursor: not-allowed; }
 
   /* Products grid */
   .prods-empty { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 30px; color: #3a3a42; font-size: 13px; }
-  .btn-add-product { display: flex; align-items: center; gap: 5px; background: #5c6df0; border: none; border-radius: 8px; color: #fff; font-size: 12px; padding: 7px 14px; cursor: pointer; }
+  .btn-add-product { display: flex; align-items: center; gap: 5px; background: var(--c-primary); border: none; border-radius: 8px; color: #fff; font-size: 12px; padding: 7px 14px; cursor: pointer; }
   .products-grid-header {
     display: grid; grid-template-columns: 2fr 90px 90px 90px 130px 32px;
     gap: 8px; font-size: 11px; color: #4a4a55; padding: 0 2px; font-weight: 500;
@@ -753,12 +753,12 @@ const wizStyles = `
     padding: 8px 10px; color: #e8e6e1; font-size: 13px; outline: none;
     width: 100%; transition: border-color .15s;
   }
-  .product-row input:focus, .product-row select:focus { border-color: #5c6df0; }
+  .product-row input:focus, .product-row select:focus { border-color: var(--c-primary); }
   .product-row select option { background: #1a1a1f; }
   .remove-row-btn { background: none; border: 1px solid #2a2a30; border-radius: 6px; color: #4a4a55; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; transition: all .1s; }
   .remove-row-btn:hover { border-color: #ef4444; color: #ef4444; }
   .btn-add-row { display: flex; align-items: center; gap: 5px; background: none; border: 1px dashed #2a2a30; border-radius: 7px; color: #6b6a65; font-size: 12px; padding: 8px 14px; cursor: pointer; transition: all .1s; width: fit-content; margin-top: 2px; }
-  .btn-add-row:hover { border-color: #5c6df0; color: #a5b4fc; }
+  .btn-add-row:hover { border-color: var(--c-primary); color: var(--c-primary-text); }
 
   /* Confirm */
   .confirm-sections { display: flex; flex-direction: column; gap: 10px; }

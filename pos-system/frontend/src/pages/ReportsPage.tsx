@@ -64,7 +64,7 @@ function ExportMenu({ onExportCSV, onExportTopCSV, onExportPDF, loading }: {
             </div>
           </button>
           <button onClick={() => { onExportTopCSV(); setOpen(false); }} className="export-option">
-            <FileSpreadsheet size={14} color="#a5b4fc" />
+            <FileSpreadsheet size={14} color="var(--c-primary-text)" />
             <div>
               <div className="export-opt-title">Top productos en Excel</div>
               <div className="export-opt-desc">Ranking por ingresos</div>
@@ -144,7 +144,7 @@ export default function ReportsPage() {
   const totalItems    = completed.reduce((a: number, s: any) =>
     a + (s.items?.reduce((b: number, i: any) => b + i.quantity, 0) ?? 0), 0);
 
-  const PIE_COLORS = ['#5c6df0','#34d399','#f59e0b','#f87171','#a78bfa','#38bdf8','#fb923c','#4ade80'];
+  const PIE_COLORS = ['var(--c-primary)','#34d399','#f59e0b','#f87171','#a78bfa','#38bdf8','#fb923c','#4ade80'];
 
   const isLoading = loadingSales || loadingTop;
 
@@ -210,7 +210,7 @@ export default function ReportsPage() {
       ) : (
         <>
           <div className="kpi-grid">
-            <KPICard icon={DollarSign}  label="Ingresos totales"   value={fmt(totalRevenue)}      sub={`${range === '7d' ? '7' : '30'} días`}  color="#5c6df0" />
+            <KPICard icon={DollarSign}  label="Ingresos totales"   value={fmt(totalRevenue)}      sub={`${range === '7d' ? '7' : '30'} días`}  color="var(--c-primary)" />
             <KPICard icon={Receipt} label="Ventas"             value={totalSales.toString()}   sub="tickets emitidos"                        color="#34d399" />
             <KPICard icon={ShoppingBag} label="Ticket promedio"    value={fmt(avgTicket)}          sub="por venta"                               color="#f59e0b" />
             <KPICard icon={TrendingUp}  label="Artículos vendidos" value={totalItems.toString()}   sub="unidades"                                color="#a78bfa" />
@@ -227,7 +227,7 @@ export default function ReportsPage() {
                   contentStyle={{ background: '#1a1a1f', border: '1px solid #2a2a30', borderRadius: 8, color: '#e8e6e1', fontSize: 12 }}
                   formatter={(v: number) => [fmt(v), 'Ingresos']}
                 />
-                <Line type="monotone" dataKey="revenue" stroke="#5c6df0" strokeWidth={2.5} dot={{ fill: '#5c6df0', r: 3 }} activeDot={{ r: 5 }} />
+                <Line type="monotone" dataKey="revenue" stroke="var(--c-primary)" strokeWidth={2.5} dot={{ fill: 'var(--c-primary)', r: 3 }} activeDot={{ r: 5 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -336,7 +336,7 @@ const repStyles = `
 
   .range-selector { display:flex; gap:6px; }
   .range-btn { display:flex; align-items:center; gap:6px; padding:7px 12px; border:1px solid #2a2a30; border-radius:8px; background:transparent; color:#6b6a65; font-size:12px; cursor:pointer; transition:all .15s; }
-  .range-btn.active { border-color:#5c6df0; background:#1a1a2e; color:#a5b4fc; }
+  .range-btn.active { border-color:var(--c-primary); background:#1a1a2e; color:var(--c-primary-text); }
   .range-btn:hover:not(.active) { border-color:#3a3a45; color:#e8e6e1; }
 
   /* Export */
