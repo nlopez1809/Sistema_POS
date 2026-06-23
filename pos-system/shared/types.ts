@@ -30,6 +30,7 @@ export interface Company {
   phone?: string;
   email?: string;
   logo_url?: string;
+  qr_payment_url?: string;
   currency: string;
   timezone: string;
   plan: Plan;

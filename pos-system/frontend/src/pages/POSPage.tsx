@@ -130,12 +130,13 @@ function CartLine({ item }: { item: ReturnType<typeof useCartStore.getState>['it
 
 // ── Payment Modal ─────────────────────────────────────────────
 function PaymentModal({
-  total, onConfirm, onClose, loading,
+  total, onConfirm, onClose, loading, qrPaymentUrl,
 }: {
   total: number;
   onConfirm: (method: PaymentMethod, paidAmount: number) => void;
   onClose: () => void;
   loading: boolean;
+  qrPaymentUrl?: string | null;
 }) {
   const [method, setMethod] = useState<PaymentMethod>('cash');
   const [paid, setPaid] = useState('');
@@ -174,6 +175,13 @@ function PaymentModal({
             </button>
           ))}
         </div>
+
+        {method === 'qr' && qrPaymentUrl && (
+          <div className="qr-payment-display">
+            <p className="qr-instruction">Muestra este QR al cliente para que realice el pago</p>
+            <img src={qrPaymentUrl} alt="QR de pago" className="qr-payment-img" />
+          </div>
+        )}
 
         {method === 'cash' && (
           <>
@@ -581,6 +589,7 @@ export default function POSPage() {
           loading={saleMutation.isPending}
           onClose={() => setShowPayment(false)}
           onConfirm={(method, paidAmount) => saleMutation.mutate({ method, paidAmount })}
+          qrPaymentUrl={company?.qr_payment_url}
         />
       )}
 
@@ -720,6 +729,10 @@ const posStyles = `
   .confirm-btn.ready { background:#22c55e; color:#fff; cursor:pointer; }
   .confirm-btn.ready:hover { background:#16a34a; }
   .confirm-btn:disabled { opacity:0.6; }
+
+  .qr-payment-display { display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px; background:#0f0f11; border-radius:14px; }
+  .qr-instruction { font-size:13px; color:#6b6a65; text-align:center; }
+  .qr-payment-img { width:200px; height:200px; object-fit:contain; border-radius:12px; background:#fff; padding:8px; }
 
   /* Success modal */
   .success-modal {

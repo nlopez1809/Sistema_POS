@@ -338,6 +338,11 @@ function BranchesSettings({ companyId }: { companyId: string }) {
 
 // ── Preferences ───────────────────────────────────────────────
 function PreferencesSettings() {
+  const { company, setCompany } = useAppStore();
+  const qc = useQueryClient();
+  const qrInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingQr, setUploadingQr] = useState(false);
+  const [qrUrl, setQrUrl] = useState<string | null>(company?.qr_payment_url ?? null);
   const [prefs, setPrefs] = useState({
     printOnSale:     localStorage.getItem('pref_print')           !== 'false',
     askCustomer:     localStorage.getItem('pref_askCustomer')     === 'true',
@@ -434,6 +439,65 @@ function PreferencesSettings() {
             </div>
           </>
         )}
+
+        {/* QR de pago */}
+        <div className="prefs-section-divider">QR de pago</div>
+        <div className="pref-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 12 }}>
+          <span className="pref-label">
+            Imagen QR para cobros
+            <span className="pref-hint">Se muestra al cliente cuando elige pagar con QR</span>
+          </span>
+          {qrUrl ? (
+            <div className="logo-preview-wrap">
+              <img src={qrUrl} alt="QR de pago" className="qr-preview" />
+              <div className="logo-actions">
+                <button onClick={() => qrInputRef.current?.click()} className="btn-ghost sm" disabled={uploadingQr}>
+                  {uploadingQr ? <Loader2 size={12} className="spin" /> : <Upload size={12} />} Cambiar
+                </button>
+                <button onClick={async () => {
+                  try {
+                    await supabase.from('companies').update({ qr_payment_url: null }).eq('id', company!.id);
+                    setQrUrl(null);
+                    setCompany({ ...company!, qr_payment_url: undefined });
+                    qc.invalidateQueries({ queryKey: ['company'] });
+                    toast.success('QR eliminado');
+                  } catch { toast.error('Error al eliminar QR'); }
+                }} className="btn-ghost sm logo-remove-btn">
+                  <Trash2 size={12} /> Quitar
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => qrInputRef.current?.click()} className="logo-dropzone" disabled={uploadingQr} style={{ padding: 18 }}>
+              {uploadingQr
+                ? <><Loader2 size={20} className="spin" /><span>Subiendo...</span></>
+                : <><Upload size={20} /><span>Subir imagen QR</span><span className="logo-hint">PNG, JPG — max 2MB</span></>
+              }
+            </button>
+          )}
+          <input ref={qrInputRef} type="file" accept="image/*" hidden onChange={async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) { toast.error('Solo imágenes'); return; }
+            if (file.size > 2 * 1024 * 1024) { toast.error('Máximo 2MB'); return; }
+            setUploadingQr(true);
+            try {
+              const ext = file.name.split('.').pop();
+              const path = `qr/${company!.id}.${ext}`;
+              const { error: upErr } = await supabase.storage.from('company-assets').upload(path, file, { upsert: true, contentType: file.type });
+              if (upErr) throw upErr;
+              const { data: urlData } = supabase.storage.from('company-assets').getPublicUrl(path);
+              const publicUrl = urlData.publicUrl + '?t=' + Date.now();
+              const { data, error } = await supabase.from('companies').update({ qr_payment_url: publicUrl }).eq('id', company!.id).select().single();
+              if (error) throw error;
+              setQrUrl(publicUrl);
+              setCompany(data);
+              qc.invalidateQueries({ queryKey: ['company'] });
+              toast.success('QR de pago guardado');
+            } catch (err: any) { toast.error(err.message ?? 'Error al subir QR'); }
+            finally { setUploadingQr(false); if (qrInputRef.current) qrInputRef.current.value = ''; }
+          }} />
+        </div>
       </div>
     </div>
   );
@@ -594,4 +658,5 @@ const cfgStyles = `
   .logo-preview { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; border: 1px solid #2a2a30; }
   .logo-actions { display: flex; gap: 8px; }
   .logo-remove-btn:hover { border-color: #ef4444 !important; color: #ef4444 !important; }
+  .qr-preview { width: 120px; height: 120px; border-radius: 10px; object-fit: contain; border: 1px solid #2a2a30; background: #fff; padding: 4px; }
 `;
